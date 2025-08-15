@@ -1,151 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY_STUFF</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY_STUFF</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        transition: background 0.3s, color 0.3s;
+    }
 
-        /* Sticky Gradient Header */
+    .title-bar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        flex-wrap: wrap;
+        transition: background 0.3s;
+    }
+
+    .title-left {
+        display: flex;
+        align-items: center;
+    }
+    .logo {
+        font-size: 2rem;
+        margin-right: 12px;
+    }
+    .title-bar h1 {
+        font-size: 1.6rem;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        padding: 6px 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .search-container input {
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        background: none;
+        width: 150px;
+    }
+    .search-container button {
+        border: none;
+        background: none;
+        color: #2575fc;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+    #resultCount {
+        margin-left: 10px;
+        font-size: 0.9rem;
+        color: #fff;
+        background: rgba(0,0,0,0.3);
+        padding: 2px 8px;
+        border-radius: 12px;
+    }
+
+    .toolbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        background-color: #eaeaea;
+        flex-wrap: wrap;
+        gap: 20px;
+        transition: background 0.3s;
+    }
+
+    .category-bar button,
+    .view-toggle button,
+    .sort-options select {
+        background: #fff;
+        border: 1px solid #ccc;
+        margin: 4px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .category-bar button:hover,
+    .view-toggle button:hover {
+        background: #2575fc;
+        color: white;
+    }
+    .category-bar button.active,
+    .view-toggle button.active {
+        background: #2575fc;
+        color: white;
+    }
+
+    main {
+        padding: 20px;
+        max-width: 1100px;
+        margin: auto;
+        transition: color 0.3s;
+    }
+
+    .card-container.grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+    .card-container.list {
+        display: block;
+    }
+
+    .card {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: background 0.3s, color 0.3s, transform 0.2s;
+    }
+    .card:hover {
+        transform: scale(1.02);
+    }
+    .card.list-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .tags {
+        margin-top: 8px;
+    }
+    .tags span {
+        background: #ddd;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        margin-right: 4px;
+        transition: background 0.3s;
+    }
+
+    mark {
+        background-color: yellow;
+        padding: 0;
+    }
+
+    #noResults {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        text-align: center;
+        font-size: 1.2rem;
+        color: #888;
+        margin-top: 20px;
+        display: none;
+    }
+    #noResults.show {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Day/Night Toggle Button */
+    .daynight-toggle {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        margin-left: 18px;
+        font-size: 1.5rem;
+        color: #fff;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+    }
+    .daynight-toggle:focus {
+        outline: 2px solid #ffffffcc;
+    }
+
+    /* NIGHT MODE STYLES */
+    body.night {
+        background: #181924;
+        color: #e5eaf1;
+    }
+    body.night .title-bar {
+        background: linear-gradient(90deg,#232938 0%,#43436d 100%);
+        color: #e5eaf1;
+    }
+    body.night .search-container {
+        background: #232938;
+        box-shadow: 0 2px 4px rgba(30,29,41,0.2);
+    }
+    body.night .category-bar button,
+    body.night .view-toggle button,
+    body.night .sort-options select {
+        background: #22253a;
+        color: #e5eaf1;
+        border: 1px solid #333756;
+    }
+    body.night .category-bar button.active,
+    body.night .category-bar button:hover,
+    body.night .view-toggle button.active,
+    body.night .view-toggle button:hover {
+        background: #6a11cb;
+        color: #fff;
+    }
+    body.night .toolbar {
+        background-color: #232938;
+    }
+    body.night main {
+        color: #e5eaf1;
+    }
+    body.night .card {
+        background: #232938;
+        color: #e5eaf1;
+    }
+    body.night .tags span {
+        background: #393b5b;
+        color: #e5eaf1;
+    }
+    body.night mark {
+        background-color: #fcf07a;
+        color: #000;
+    }
+    body.night #noResults {
+        color: #dadada;
+    }
+    body.night .search-container input {
+        color: #fff;
+    }
+    body.night #resultCount {
+        background: rgba(255,255,255,0.08);
+        color: #fcf07a;
+    }
+    @media (max-width: 600px) {
         .title-bar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 20px;
-            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: flex-start;
         }
-
-        /* Left Section */
-        .title-left {
-            display: flex;
-            align-items: center;
-        }
-        .logo {
-            font-size: 2rem;
-            margin-right: 12px;
-        }
-        .title-bar h1 {
-            font-size: 1.6rem;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        /* Search bar styling */
         .search-container {
-            display: flex;
-            align-items: center;
-            background-color: white;
-            padding: 6px 10px;
-            border-radius: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 8px;
+            width: 100%;
         }
         .search-container input {
-            border: none;
-            outline: none;
-            font-size: 1rem;
-            background: none;
-            width: 180px;
+            width: 100%;
         }
-        .search-container button {
-            border: none;
-            background: none;
-            color: #2575fc;
-            font-size: 1.2rem;
-            cursor: pointer;
+        #resultCount {
+            margin-top: 4px;
+            display: inline-block;
         }
-
-        /* Page Content */
-        main {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .card {
-            background: white;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease;
-        }
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-        /* Mobile adjustments */
-        @media (max-width: 600px) {
-            .title-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .search-container {
-                margin-top: 8px;
-                width: 100%;
-            }
-            .search-container input {
-                width: 100%;
-            }
-            .title-bar h1 {
-                font-size: 1.2rem;
-            }
-            .logo {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-
-    <header class="title-bar">
-        <!-- Left (Logo + Title) -->
-        <div class="title-left">
-            <div class="logo">📦</div>
-            <h1>MY_STUFF</h1>
-        </div>
-
-        <!-- Search bar -->
+<header class="title-bar">
+    <div class="title-left">
+        <div class="logo">📦</div>
+        <h1>MY_STUFF</h1>
+    </div>
+    <div style="display:flex;align-items:center;">
         <div class="search-container">
             <input type="text" placeholder="Search..." id="searchInput" onkeyup="filterItems()">
             <button onclick="filterItems()">🔍</button>
+            <span id="resultCount">0 results</span>
         </div>
-    </header>
+        <button class="daynight-toggle" id="daynightToggle" title="Toggle Day/Night mode">
+            <span id="toggleIcon">🌙</span>
+        </button>
+    </div>
+</header>
+<div class="toolbar">
+    <div class="category-bar">
+        <button class="active" data-category="all">All</button>
+        <button data-category="electronics">Electronics</button>
+        <button data-category="books">Books</button>
+        <button data-category="clothing">Clothing</button>
+    </div>
+    <div class="view-toggle">
+        <button class="active" data-view="grid">Grid View</button>
+        <button data-view="list">List View</button>
+    </div>
+    <div class="sort-options">
+        <select id="sortSelect" onchange="sortItems()">
+            <option value="original">Sort by: Recently Added</option>
+            <option value="az">Sort by: Name (A–Z)</option>
+            <option value="za">Sort by: Name (Z–A)</option>
+        </select>
+    </div>
+</div>
+<main>
+    <div class="card-container grid" id="cardContainer">
+        <div class="card" data-category="electronics"><h2>Laptop</h2><p>High performance laptop for work and play.</p><div class="tags"><span>Electronics</span></div></div>
+        <div class="card" data-category="books"><h2>Science Fiction Novel</h2><p>A thrilling journey through space.</p><div class="tags"><span>Books</span></div></div>
+        <div class="card" data-category="electronics"><h2>Smartphone</h2><p>Latest model smartphone with premium features.</p><div class="tags"><span>Electronics</span></div></div>
+        <div class="card" data-category="clothing"><h2>T-Shirt</h2><p>Comfortable cotton T-shirt in multiple sizes.</p><div class="tags"><span>Clothing</span></div></div>
+        <div class="card" data-category="books"><h2>History Book</h2><p>Detailed insights into world history.</p><div class="tags"><span>Books</span></div></div>
+    </div>
+    <div id="noResults">No results found</div>
+</main>
+<script>
+    let selectedCategories = ['all'];
+    let currentView = 'grid';
+    let originalOrder = Array.from(document.querySelectorAll('#cardContainer .card'));
 
-    <main>
-        <div class="card"><h2>Item 1</h2><p>This is the first item description.</p></div>
-        <div class="card"><h2>Item 2</h2><p>Details about the second item.</p></div>
-        <div class="card"><h2>Item 3</h2><p>Some text for the third item.</p></div>
-        <div class="card"><h2>Item 4</h2><p>Fourth item content here.</p></div>
-        <div class="card"><h2>Item 5</h2><p>Information about item number five.</p></div>
-    </main>
-
-    <script>
-        function filterItems() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.querySelectorAll('.card');
-
-            cards.forEach(card => {
-                let text = card.innerText.toLowerCase();
-                if (text.includes(input)) {
-                    card.style.display = "";
-                } else {
-                    card.style.display = "none";
+    // CATEGORY SELECTION
+    document.querySelectorAll('.category-bar button').forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.getAttribute('data-category');
+            if (category === 'all') {
+                selectedCategories = ['all'];
+                document.querySelectorAll('.category-bar button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            } else {
+                if (selectedCategories.includes('all')) {
+                    selectedCategories = [];
+                    document.querySelector('.category-bar button[data-category="all"]').classList.remove('active');
                 }
-            });
-        }
-    </script>
+                if (selectedCategories.includes(category)) {
+                    selectedCategories = selectedCategories.filter(c => c !== category);
+                    button.classList.remove('active');
+                    if (selectedCategories.length === 0) {
+                        selectedCategories = ['all'];
+                        document.querySelector('.category-bar button[data-category="all"]').classList.add('active');
+                    }
+                } else {
+                    selectedCategories.push(category);
+                    button.classList.add('active');
+                }
+            }
+            filterItems();
+        });
+    });
 
+    // VIEW TOGGLE
+    document.querySelectorAll('.view-toggle button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('.view-toggle button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            currentView = button.getAttribute('data-view');
+            const container = document.getElementById('cardContainer');
+            container.className = `card-container ${currentView}`;
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.toggle('list-item', currentView === 'list');
+            });
+        });
+    });
+
+    // FILTER FUNCTION
+    function filterItems() {
+        let input = document.getElementById('searchInput').value.trim().toLowerCase();
+        let cards = document.querySelectorAll('.card');
+        let noResults = document.getElementById('noResults');
+        let resultCount = document.getElementById('resultCount');
+        let keywords = input.split(/\s+/).filter(word => word.length > 0);
+        let matchCount = 0;
+        cards.forEach(card => {
+            let cleanHTML = card.innerHTML.replace(/<\/?mark>/g, '');
+            card.innerHTML = cleanHTML;
+            let text = card.innerText.toLowerCase();
+            let category = card.getAttribute('data-category');
+            let categoryMatch = (selectedCategories.includes('all') || selectedCategories.includes(category));
+            let textMatch = keywords.length === 0 || keywords.some(word => text.includes(word));
+            if (categoryMatch && textMatch) {
+                card.style.display = "";
+                matchCount++;
+                keywords.forEach(word => highlightText(card, word));
+            } else {
+                card.style.display = "none";
+            }
+        });
+        resultCount.textContent = `${matchCount} result${matchCount !== 1 ? 's' : ''}`;
+        noResults.classList.toggle('show', matchCount === 0);
+    }
+
+    // SORT FUNCTION
+    function sortItems() {
+        const container = document.getElementById('cardContainer');
+        let sortType = document.getElementById('sortSelect').value;
+        let cards = Array.from(container.querySelectorAll('.card'));
+        if (sortType === 'az') {
+            cards.sort((a, b) => a.querySelector('h2').innerText.localeCompare(b.querySelector('h2').innerText));
+        } else if (sortType === 'za') {
+            cards.sort((a, b) => b.querySelector('h2').innerText.localeCompare(a.querySelector('h2').innerText));
+        } else {
+            cards = [...originalOrder];
+        }
+        container.innerHTML = '';
+        cards.forEach(card => container.appendChild(card));
+        filterItems();
+    }
+
+    function highlightText(element, search) {
+        if (!search) return;
+        let regex = new RegExp(`(${escapeRegExp(search)})`, "gi");
+        element.innerHTML = element.innerHTML.replace(regex, "<mark>$1</mark>");
+    }
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Day/Night Toggle Logic
+    const dnToggle = document.getElementById('daynightToggle');
+    const dnIcon = document.getElementById('toggleIcon');
+    dnToggle.addEventListener('click', () => {
+        document.body.classList.toggle('night');
+        const isNight = document.body.classList.contains('night');
+        dnIcon.textContent = isNight ? "🌞" : "🌙";
+    });
+
+    // Persist theme for this session
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('night');
+        dnIcon.textContent = "🌞";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        filterItems();
+    });
+</script>
 </body>
 </html>
