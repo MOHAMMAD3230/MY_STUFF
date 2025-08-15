@@ -201,7 +201,7 @@ function fetchWeather() {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(pos => {
         const { latitude, longitude } = pos.coords;
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`)
+        fetch(`https://open-weather13.p.rapidapi.com?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`)
             .then(res => res.json())
             .then(data => {
                 currentWeather = data.weather[0].description.toLowerCase();
