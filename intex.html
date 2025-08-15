@@ -1,260 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MY_STUFF</title>
-<style>
-:root {
-    --bg-dark: linear-gradient(180deg, #1a1a2e, #16213e);
-    --bg-light: linear-gradient(180deg, #e0eafc, #cfdef3);
-    --text-dark: white;
-    --text-light: black;
-    --card-dark: rgba(255,255,255,0.05);
-    --card-light: rgba(0,0,0,0.05);
-} 
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--bg-dark);
-    color: var(--text-dark);
-    transition: background 1.2s ease, color 1.2s ease;
-}
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-#themeTransition {
-    position: fixed; inset: 0;
-    background: black;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: opacity 0.8s ease;
-}
-.fade { opacity: 1 !important; }
-.title-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 15px 25px; position: fixed; top: 0; left: 0;
-    width: 100%;
-    background-size: 300% 300%;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    z-index: 1000;
-    animation: gradientShift 20s ease infinite;
-    transition: background 60s linear; /* smooth morphing */
-}
-.title-bar .logo {
-    font-size: 1.8rem; cursor: pointer;
-    transition: transform 0.3s ease;
-}
-.title-bar .logo:hover { transform: scale(1.2) rotate(10deg); }
-.title-bar h1 {
-    margin: 0; text-transform: uppercase;
-    letter-spacing: 3px; font-weight: bold;
-    transition: text-shadow 0.4s ease;
-    cursor: pointer;
-}
-.title-bar h1:hover { text-shadow: 0 0 10px #fff, 0 0 20px #ff9800, 0 0 30px #ff5722; }
-.mode-toggle {
-    cursor: pointer; font-size: 1.2rem; border: none;
-    background: rgba(255,255,255,0.2);
-    padding: 6px 12px; border-radius: 6px;
-    backdrop-filter: blur(5px);
-    transition: background 0.3s ease, transform 0.3s ease;
-}
-.mode-toggle:hover {
-    transform: scale(1.1);
-    background: rgba(255,255,255,0.3);
-}
-main { padding-top: 90px; }
-section {
-    padding: 40px; max-width: 800px; margin: auto;
-    background: var(--card-dark);
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
-    margin-top: 20px;
-    transition: background 0.6s ease;
-}
-.menu {
-    position: fixed; top: 60px; left: 20px;
-    background: rgba(0,0,0,0.6);
-    padding: 10px 20px;
-    border-radius: 8px;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.3s ease;
-}
-.menu a {
-    display: block; padding: 8px 0;
-    color: white; text-decoration: none;
-    transition: color 0.2s ease;
-}
-.menu a:hover { color: #ff9800; }
-.menu.show { transform: scaleY(1); }
-body.light {
-    background: var(--bg-light);
-    color: var(--text-light);
-}
-body.light .menu { background: rgba(255,255,255,0.8); }
-body.light .menu a { color: black; }
-body.light section { background: var(--card-light); }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My_Stuff</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(180deg, #1a1a2e, #16213e);
+      color: white;
+    }
+    /* Smart Sky Header */
+    .title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 25px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-size: 300% 300%;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      height: 80px;
+      animation: gradientShift 20s ease infinite;
+      transition: background 2s ease;
+      overflow: hidden;
+    }
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      flex-grow: 1;
+    }
+    #weatherIcon svg {
+      width: 40px;
+      height: 40px;
+    }
+    #skyObject {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      font-size: 24px;
+      transition: all 60s linear;
+      z-index: 2;
+    }
+    /* Moving cloud overlay */
+    @keyframes moveClouds {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+    #cloudOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background: url('https://i.ibb.co/tc3rAnd/clouds.png') repeat-x;
+      background-size: cover;
+      opacity: 0;
+      animation: moveClouds 60s linear infinite;
+      transition: opacity 1s ease;
+    }
+    main {
+      padding-top: 90px;
+    }
+
+    /* Responsive Mobile Adjustments */
+    @media (max-width: 600px) {
+      .title-bar {
+        height: 60px;
+        padding: 10px 15px;
+      }
+      .title-bar h1 {
+        font-size: 1.2rem;
+      }
+      #skyObject {
+        width: 24px;
+        height: 24px;
+        font-size: 18px;
+      }
+      #weatherIcon svg {
+        width: 24px;
+        height: 24px;
+      }
+      .mode-toggle {
+        font-size: 1rem;
+        padding: 4px 8px;
+      }
+      main {
+        padding-top: 70px;
+      }
+      .mytuner-widget {
+        max-width: 100% !important;
+        overflow-x: auto;
+      }
+      marquee mark {
+        font-size: 0.9rem;
+        padding: 2px 4px;
+      }
+      .mode-toggle,
+      .logo {
+        touch-action: manipulation;
+        user-select: none;
+      }
+      #cloudOverlay {
+        background-size: contain;
+      }
+    }
+    /* Style mode toggle button */
+    .mode-toggle {
+      cursor: pointer;
+      font-size: 1.2rem;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      backdrop-filter: blur(5px);
+      transition: background 0.3s ease, transform 0.3s ease;
+      color: white;
+    }
+    .mode-toggle:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
 <body>
-
-<div id="themeTransition"></div>
-
-<header class="title-bar">
-    <div class="logo" id="menuToggle">📦</div>
-    <h1>MY_STUFF</h1>
+  <!-- SMART SKY HEADER -->
+  <header class="title-bar" id="headerBar">
+    <div class="title-left">
+      <h1>MY_STUFF</h1>
+      <span id="weatherIcon"></span>
+      <div id="skyObject">☀️</div>
+      <div id="cloudOverlay"></div>
+    </div>
     <button class="mode-toggle" id="modeToggle">🌙</button>
-</header>
+  </header>
 
-<nav class="menu" id="dropdownMenu">
-    <a href="#">Home</a>
-    <a href="#">Projects</a>
-    <a href="#">Music</a>
-    <a href="#">Contact</a>
-</nav>
+  <main>
+    <marquee direction="right"><mark>Site is Under Maintenance</mark></marquee>
+    <h3>Categories</h3>
+    <pre>
+      <a href="songs.html"><strong>Songs</strong></a>
+      <a href="MSB.html"><strong>MSB</strong></a>
+      <a href="Activity 3">Activity 3</a>
+    </pre>
+    <!-- Existing radio widgets and other content can go here -->
+  </main>
 
-<main>
-    <section>
-        <h2>Welcome</h2>
-        <p>The sky above reflects **both the real-time weather** in your location and **smooth time-of-day transitions**.</p>
-    </section>
-    <section>
-        <h2>Live Smart Sky</h2>
-        <p>Allow location access to watch your header transform according to actual morning, evening, clouds, rain, or snow.</p>
-        <div style="height: 1000px;"></div>
-    </section>
-</main>
+  <script>
+    const API_KEY = "30cbe4bc30msh5fdcf92c4fd37b1p1c022fjsncc0f1842bb0a"; // Replace with your OpenWeatherMap API key
+    let sunriseTime = 6,
+      sunsetTime = 18;
+    let currentWeather = "clear sky";
+    let cloudinessPercent = 0;
+    let manualMode = null; // null = auto, "day" or "night" manual override
 
-<script>
-const API_KEY = "30cbe4bc30msh5fdcf92c4fd37b1p1c022fjsncc0f1842bb0a"; // Get from OpenWeatherMap
-const body = document.body;
-const menuToggle = document.getElementById('menuToggle');
-const dropdownMenu = document.getElementById('dropdownMenu');
-const modeToggle = document.getElementById('modeToggle');
-const header = document.querySelector('.title-bar');
-const themeOverlay = document.getElementById('themeTransition');
+    const skyObject = document.getElementById("skyObject");
+    const headerBar = document.getElementById("headerBar");
+    const weatherIcon = document.getElementById("weatherIcon");
+    const cloudOverlay = document.getElementById("cloudOverlay");
+    const modeToggle = document.getElementById("modeToggle");
 
-let currentWeather = null;
-
-// Menu
-menuToggle.addEventListener('click', () => dropdownMenu.classList.toggle('show'));
-document.addEventListener('click', e => {
-    if (!menuToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.remove('show');
+    function blendColors(c1, c2, percent) {
+      const parse = (hex) => hex.match(/\w\w/g).map((x) => parseInt(x, 16));
+      const [r1, g1, b1] = parse(c1),
+        [r2, g2, b2] = parse(c2);
+      const r = Math.round(r1 + (r2 - r1) * percent);
+      const g = Math.round(g1 + (g2 - g1) * percent);
+      const b = Math.round(b1 + (b2 - b1) * percent);
+      return `rgb(${r},${g},${b})`;
     }
-});
 
-// Fade transition
-function fadeThemeChange(callback) {
-    themeOverlay.classList.add('fade');
-    setTimeout(() => {
-        callback();
-        setTimeout(() => themeOverlay.classList.remove('fade'), 300);
-    }, 300);
-}
+    function getWeatherGradient(weather, percent, isDay) {
+      if (weather.includes("rain")) return "linear-gradient(-45deg,#3f4c6b,#606c88)";
+      if (weather.includes("snow")) return "linear-gradient(-45deg,#e0eafc,#cfdef3)";
+      const sunsetColor = "#FFA500",
+        middayColor = "#FFD700",
+        sunriseColor = "#FFD4A5",
+        nightColor = "#1a1a2e";
+      if (isDay) {
+        // Blend between sunrise/sunset color and midday
+        let gradColor;
+        if (percent < 0.25) gradColor = blendColors(sunriseColor, middayColor, percent / 0.25);
+        else if (percent > 0.75) gradColor = blendColors(middayColor, sunsetColor, (percent - 0.75) / 0.25);
+        else gradColor = middayColor;
+        return `linear-gradient(-45deg, ${gradColor}, skyblue 80%)`;
+      }
+      return `linear-gradient(-45deg, ${nightColor}, #403d39 80%)`;
+    }
 
-// Weather-color mapping
-function getWeatherGradient(weather, hour) {
-    const isDay = hour >= 6 && hour < 18;
-    if (weather.includes("clear"))
-        return isDay ? "linear-gradient(-45deg, skyblue, lightyellow)" 
-                     : "linear-gradient(-45deg, navy, midnightblue)";
-    if (weather.includes("cloud"))
-        return isDay ? "linear-gradient(-45deg, lightgray, skyblue)"
-                     : "linear-gradient(-45deg, #403d39, #252422)";
-    if (weather.includes("rain") || weather.includes("drizzle"))
-        return "linear-gradient(-45deg, #3f4c6b, #606c88)";
-    if (weather.includes("thunderstorm"))
-        return "linear-gradient(-45deg, #2c3e50, #4b79a1)";
-    if (weather.includes("snow"))
-        return "linear-gradient(-45deg, #e0eafc, #cfdef3)";
-    return isDay ? "linear-gradient(-45deg, #87CEEB, #fff)"
-                 : "linear-gradient(-45deg, #2c3e50, #000)";
-}
+    function layeredSVG(weather) {
+      if (weather.includes("cloud"))
+        return `<svg viewBox="0 0 64 64"><ellipse cx="38" cy="32" rx="20" ry="10" fill="lightgray"><animate attributeName="cx" values="38;40;38" dur="5s" repeatCount="indefinite"/></ellipse></svg>`;
+      if (weather.includes("rain"))
+        return `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="28" rx="20" ry="10" fill="gray"/><line x1="24" y1="36" x2="24" y2="46" stroke="blue" stroke-width="2"><animateTransform attributeName="transform" type="translate" values="0 0;0 8" dur="0.5s" repeatCount="indefinite"/></line></svg>`;
+      return `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" fill="gold"><animateTransform attributeName="transform" type="rotate" from="0 32 32" to="360 32 32" dur="10s" repeatCount="indefinite"/></circle></svg>`;
+    }
 
-// Time-only gradients (base sky if no weather)
-function getTimeGradient(hour) {
-    if (hour >= 5 && hour < 11) return "linear-gradient(-45deg, rgba(255, 183, 94, 0.8), rgba(255, 224, 178, 0.8))";
-    if (hour >= 11 && hour < 17) return "linear-gradient(-45deg, rgba(135, 206, 250, 0.8), rgba(255, 255, 255, 0.8))";
-    if (hour >= 17 && hour < 20) return "linear-gradient(-45deg, rgba(255, 94, 98, 0.8), rgba(255, 183, 77, 0.8))";
-    return "linear-gradient(-45deg, rgba(25, 25, 112, 0.8), rgba(70, 130, 180, 0.8))";
-}
+    function updateSkyArc() {
+      const now = new Date();
+      const hr = now.getHours() + now.getMinutes() / 60;
 
-// Apply gradient
-function applyGradient(gradient) {
-    header.style.background = gradient;
-    header.style.backgroundSize = '300% 300%';
-}
+      // Use manual override if set
+      let isDay = hr >= sunriseTime && hr < sunsetTime;
+      if (manualMode === "day") isDay = true;
+      if (manualMode === "night") isDay = false;
 
-// Fetch Weather
-function fetchWeather() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(pos => {
+      let percent;
+      if (isDay) {
+        percent = (hr - sunriseTime) / (sunsetTime - sunriseTime);
+        percent = Math.max(0, Math.min(1, percent));
+      } else {
+        if (hr < sunriseTime) percent = (hr + 24 - sunsetTime) / ((24 - sunsetTime) + sunriseTime);
+        else percent = (hr - sunsetTime) / ((24 - sunsetTime) + sunriseTime);
+        percent = Math.max(0, Math.min(1, percent));
+      }
+
+      const width = Math.max(headerBar.offsetWidth - 40, 200);
+      const arcHeight = 30;
+      let x = percent * width;
+      x = Math.min(Math.max(x, 10), width);
+      const y = arcHeight - Math.sin(percent * Math.PI) * arcHeight;
+
+      // Dynamic Sun/Moon color
+      let color;
+      if (isDay) {
+        if (percent < 0.2) color = blendColors("#FFA500", "#FFD700", percent / 0.2);
+        else if (percent > 0.8) color = blendColors("#FFD700", "#FFA500", (percent - 0.8) / 0.2);
+        else color = "#FFD700";
+      } else {
+        color = "#F0F8FF";
+      }
+
+      // Glow dimming by clouds
+      const cloudFactor = 1 - cloudinessPercent / 100;
+      const glowStrength = Math.max(5, 45 * cloudFactor);
+      const glow = `${color} 0 0 ${glowStrength}px, ${color} 0 0 ${
+        glowStrength * 1.5
+      }px`;
+
+      // Cloud overlay opacity & speed
+      cloudOverlay.style.opacity = Math.min(1, cloudinessPercent / 100);
+      const baseSpeed = 120; // slowest animation for clear sky
+      const speed = baseSpeed - cloudinessPercent; // faster with more clouds
+      cloudOverlay.style.animationDuration = `${Math.max(30, speed)}s`;
+
+      // Set gradient background with sunrise/sunset tint
+      headerBar.style.background = getWeatherGradient(currentWeather, percent, isDay);
+
+      // Sun/Moon icon color/glow/position
+      skyObject.textContent = isDay ? "☀️" : "🌙";
+      skyObject.style.left = `${x}px`;
+      skyObject.style.top = `${y}px`;
+      skyObject.style.color = color;
+      skyObject.style.textShadow = glow;
+    }
+
+    function fetchWeather() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition((pos) => {
         const { latitude, longitude } = pos.coords;
-        fetch(`https://open-weather13.p.rapidapi.com?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`)
-            .then(res => res.json())
-            .then(data => {
-                currentWeather = data.weather[0].description.toLowerCase();
-                updateSky();
-            })
-            .catch(err => console.error("Weather fetch error:", err));
-    });
-}
-
-// Update sky blending weather + time
-function updateSky() {
-    const hour = new Date().getHours();
-    let gradient;
-    if (currentWeather) {
-        gradient = getWeatherGradient(currentWeather, hour);
-    } else {
-        gradient = getTimeGradient(hour);
+        fetch(
+          `https://fivedaysforcast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            currentWeather = data.weather[0].description.toLowerCase();
+            cloudinessPercent = data.clouds?.all || 0;
+            const sr = new Date(data.sys.sunrise * 1000);
+            const ss = new Date(data.sys.sunset * 1000);
+            sunriseTime = sr.getHours() + sr.getMinutes() / 60;
+            sunsetTime = ss.getHours() + ss.getMinutes() / 60;
+            weatherIcon.innerHTML = layeredSVG(currentWeather);
+            updateSkyArc();
+          });
+      });
     }
-    applyGradient(gradient);
-}
 
-// Auto theme setting for dark/light body
-function setThemeByTime() {
-    const hour = new Date().getHours();
-    const isLight = hour >= 6 && hour < 18;
-    body.classList.toggle('light', isLight);
-    modeToggle.textContent = isLight ? '☀️' : '🌙';
-}
+    modeToggle.onclick = () => {
+      if (manualMode === "day") {
+        manualMode = "night";
+        modeToggle.textContent = "☀️";
+      } else {
+        manualMode = "day";
+        modeToggle.textContent = "🌙";
+      }
+      updateSkyArc();
+    };
 
-// Manual override
-modeToggle.addEventListener('click', () => {
-    fadeThemeChange(() => {
-        body.classList.toggle('light');
-        modeToggle.textContent = body.classList.contains('light') ? '☀️' : '🌙';
-    });
-});
-
-// Init
-setThemeByTime();
-fetchWeather();
-updateSky();
-
-// Update time-sky every minute
-setInterval(() => {
-    setThemeByTime();
-    updateSky();
-}, 60 * 1000);
-
-// Refresh weather every 10 minutes
-setInterval(fetchWeather, 10 * 60 * 1000);
-</script>
-
+    fetchWeather();
+    setInterval(updateSkyArc, 60 * 1000);
+    setInterval(fetchWeather, 10 * 60 * 1000);
+  </script>
 </body>
 </html>
-
-
