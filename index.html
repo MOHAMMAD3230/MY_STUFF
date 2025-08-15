@@ -252,7 +252,6 @@
 <div class="toolbar">
     <div class="category-bar">
         <button class="active" data-category="all">All</button>
-        <button data-category="radio">Radio</button>
         <button data-category="electronics">Electronics</button>
         <button data-category="books">Books</button>
         <button data-category="clothing">Clothing</button>
@@ -272,15 +271,6 @@
 
 <main>
     <div class="card-container grid" id="cardContainer">
-        <!-- Radio card is FIRST! -->
-        <div class="card" data-category="radio">
-            <h2>AP 9 FM (Live Radio)</h2>
-            <div style="margin-top: 10px;">
-               <!-- (Paste your full radio widget code here - styles, html, scripts) -->
-               <!-- ... Your long widget code goes here ... -->
-            </div>
-        </div>
-        <!-- All other cards follow below -->
         <div class="card" data-category="electronics"><h2>Laptop</h2><p>High performance laptop for work and play.</p><div class="tags"><span>Electronics</span></div></div>
         <div class="card" data-category="books"><h2>Science Fiction Novel</h2><p>A thrilling journey through space.</p><div class="tags"><span>Books</span></div></div>
         <div class="card" data-category="electronics"><h2>Smartphone</h2><p>Latest model smartphone with premium features.</p><div class="tags"><span>Electronics</span></div></div>
@@ -306,6 +296,7 @@
     const dnToggle = document.getElementById('daynightToggle');
     const toggleThumb = document.getElementById('toggleThumb');
 
+    // CATEGORY SELECTION
     document.querySelectorAll('.category-bar button').forEach(button => {
         button.addEventListener('click', () => {
             const category = button.getAttribute('data-category');
@@ -334,6 +325,7 @@
         });
     });
 
+    // VIEW TOGGLE
     document.querySelectorAll('.view-toggle button').forEach(button => {
         button.addEventListener('click', () => {
             document.querySelectorAll('.view-toggle button').forEach(btn => btn.classList.remove('active'));
@@ -347,6 +339,7 @@
         });
     });
 
+    // FILTER FUNCTION
     function filterItems() {
         let input = document.getElementById('searchInput').value.trim().toLowerCase();
         let cards = document.querySelectorAll('.card');
@@ -373,6 +366,7 @@
         noResults.classList.toggle('show', matchCount === 0);
     }
 
+    // SORT FUNCTION
     function sortItems() {
         const container = document.getElementById('cardContainer');
         let sortType = document.getElementById('sortSelect').value;
@@ -389,6 +383,7 @@
         filterItems();
     }
 
+    // Highlight helper
     function highlightText(element, search) {
         if (!search) return;
         let regex = new RegExp(`(${escapeRegExp(search)})`, "gi");
@@ -398,6 +393,7 @@
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
+    // Day/Night Toggle Logic with sliding emoji
     dnToggle.addEventListener('click', () => {
         dnToggle.classList.toggle('night');
         const isNight = dnToggle.classList.contains('night');
@@ -405,6 +401,7 @@
         document.body.classList.toggle('night', isNight);
     });
 
+    // Initialize day/night mode based on user preference or system
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         dnToggle.classList.add('night');
         toggleThumb.textContent = "🌞";
