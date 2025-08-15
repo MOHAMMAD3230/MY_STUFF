@@ -1,176 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rotating Futuristic Titles</title>
-<style>
-    body {
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        position: relative;
-        animation: breatheBg 10s ease-in-out infinite;
-        background: linear-gradient(135deg, #1f1c2c, #928dab);
-        background-size: 300% 300%;
-    }
-    @keyframes breatheBg {
-        0% { background-position: 0% 50%; filter: brightness(0.9); }
-        50% { background-position: 100% 50%; filter: brightness(1.1); }
-        100% { background-position: 0% 50%; filter: brightness(0.9); }
-    }
-    #particles { position: absolute; top: 0; left: 0; width:100%; height:100%; z-index:0; }
-    .glass-header {
-        position: relative;
-        z-index: 1;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 15px;
-        padding: 20px 50px;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        text-align: center;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeUp 1s ease forwards 0.5s;
-    }
-    h1 {
-        font-size: 2.5rem;
-        background: linear-gradient(90deg, #00c6ff, #ff00ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin: 0;
-        font-weight: 900;
-        white-space: nowrap;
-        border-right: 3px solid rgba(255,255,255,0.7);
-    }
-    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-</style>
-</head>
-<body>
-    <canvas id="particles"></canvas>
-    <div class="glass-header">
-        <h1 id="dynamicTitle"></h1>
-    </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY_STUFF</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
 
-<script>
-async function loadConfig() {
-    try {
-        const res = await fetch('config.json');
-        const config = await res.json();
-        startTitleRotation(config.titles, config.typingSpeed || 2, config.pauseTime || 1);
-    } catch (e) {
-        console.error("Error loading config.json", e);
-        startTitleRotation(["MY_STUFF"], 2, 1);
-    }
-}
+        /* Sticky Gradient Header */
+        .title-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            flex-wrap: wrap;
+        }
 
-function delay(ms) {
-    return new Promise(res => setTimeout(res, ms));
-}
+        /* Left Section */
+        .title-left {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            font-size: 2rem;
+            margin-right: 12px;
+        }
+        .title-bar h1 {
+            font-size: 1.6rem;
+            margin: 0;
+            font-weight: bold;
+        }
 
-async function startTitleRotation(titles, typingSpeed, pauseTime) {
-    const titleElement = document.getElementById('dynamicTitle');
-    let index = 0;
-    while (true) {
-        const currentText = titles[index];
-        await typeText(titleElement, currentText, typingSpeed);
-        await delay(pauseTime * 1000);
-        await eraseText(titleElement, typingSpeed / 2);
-        index = (index + 1) % titles.length;
-    }
-}
+        /* Search bar styling */
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 6px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .search-container input {
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: none;
+            width: 180px;
+        }
+        .search-container button {
+            border: none;
+            background: none;
+            color: #2575fc;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
 
-async function typeText(el, text, duration) {
-    el.textContent = "";
-    const stepTime = (duration * 1000) / text.length;
-    for (let ch of text) {
-        el.textContent += ch;
-        await delay(stepTime);
-    }
-}
+        /* Page Content */
+        main {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
 
-async function eraseText(el, duration) {
-    const stepTime = (duration * 1000) / el.textContent.length;
-    while (el.textContent.length > 0) {
-        el.textContent = el.textContent.slice(0, -1);
-        await delay(stepTime);
-    }
-}
+        .card {
+            background: white;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
 
-/* === Neon Particle Background === */
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const particles = [];
-const mouse = { x: null, y: null, radius: 120 };
-let hue = 0;
-
-for (let i = 0; i < 80; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 3 + 1,
-        dx: (Math.random() - 0.5) * 1,
-        dy: (Math.random() - 0.5) * 1
-    });
-}
-
-function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    hue += 0.5;
-    for (let a = 0; a < particles.length; a++) {
-        for (let b = a + 1; b < particles.length; b++) {
-            const dx = particles[a].x - particles[b].x;
-            const dy = particles[a].y - particles[b].y;
-            const dist = Math.sqrt(dx ** 2 + dy ** 2);
-            if (dist < 120) {
-                ctx.strokeStyle = `hsla(${hue},100%,60%,${1 - dist / 120})`;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = `hsla(${hue},100%,60%,1)`;
-                ctx.beginPath();
-                ctx.moveTo(particles[a].x, particles[a].y);
-                ctx.lineTo(particles[b].x, particles[b].y);
-                ctx.stroke();
-                ctx.shadowBlur = 0;
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            .title-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .search-container {
+                margin-top: 8px;
+                width: 100%;
+            }
+            .search-container input {
+                width: 100%;
+            }
+            .title-bar h1 {
+                font-size: 1.2rem;
+            }
+            .logo {
+                font-size: 1.5rem;
             }
         }
-    }
-    particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "#fff";
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-        const distX = mouse.x - p.x;
-        const distY = mouse.y - p.y;
-        if (Math.sqrt(distX**2 + distY**2) < mouse.radius) {
-            p.x -= distX / 15;
-            p.y -= distY / 15;
+    </style>
+</head>
+<body>
+
+    <header class="title-bar">
+        <!-- Left (Logo + Title) -->
+        <div class="title-left">
+            <div class="logo">📦</div>
+            <h1>MY_STUFF</h1>
+        </div>
+
+        <!-- Search bar -->
+        <div class="search-container">
+            <input type="text" placeholder="Search..." id="searchInput" onkeyup="filterItems()">
+            <button onclick="filterItems()">🔍</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="card"><h2>Item 1</h2><p>This is the first item description.</p></div>
+        <div class="card"><h2>Item 2</h2><p>Details about the second item.</p></div>
+        <div class="card"><h2>Item 3</h2><p>Some text for the third item.</p></div>
+        <div class="card"><h2>Item 4</h2><p>Fourth item content here.</p></div>
+        <div class="card"><h2>Item 5</h2><p>Information about item number five.</p></div>
+    </main>
+
+    <script>
+        function filterItems() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                let text = card.innerText.toLowerCase();
+                if (text.includes(input)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
         }
-    });
-    requestAnimationFrame(drawParticles);
-}
+    </script>
 
-window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
-
-drawParticles();
-loadConfig();
-</script>
 </body>
 </html>
