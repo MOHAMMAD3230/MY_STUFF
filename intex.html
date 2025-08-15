@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY_STUFF</title>
+    <style>
+        /* Reset styles */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        /* Animated Gradient Background */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+
+            background: linear-gradient(-45deg, #ff4e50, #fc913a, #f9d423, #1ba098);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+
+        .title-bar .logo {
+            font-size: 1.5rem;
+        }
+
+        /* Space for fixed header */
+        main {
+            padding-top: 80px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Gradient Title Bar -->
+    <header class="title-bar">
+        <div class="logo">📦</div>
+        <h1>MY_STUFF</h1>
+    </header>
+
+    <main>
+        <p>Welcome to MY_STUFF! Enjoy the modern gradient header.</p>
+        <p>Scroll down to see how it stays fixed at the top.</p>
+        <div style="height: 1500px;"></div>
+    </main>
+
+</body>
+</html>
